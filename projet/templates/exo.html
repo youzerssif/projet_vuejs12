@@ -89,14 +89,11 @@
 
     
 
-    <div id="test">
+    <div id="app">
         
         <div class="container">
-            <section class="fdb-block" v-if="register" style="background-image: url(https://cdn.pixabay.com/photo/2015/06/22/08/40/child-817373_1280.jpg);">
+            <section class="fdb-block"  style="background-image: url(https://cdn.pixabay.com/photo/2015/06/22/08/40/child-817373_1280.jpg);">
                 <div class="container">
-                        <div class="container text-center">
-                            <button v-on:click="affichelogin" v-if="buttonlogin" type="button" class="btn btn-primary">login</button>
-                        </div>
                     <div class="row justify-content-center">
                     <div class="col-12 col-md-8 col-lg-7 col-xl-5 text-center">
                         <div class="fdb-box">
@@ -113,7 +110,7 @@
                         </div>
                         <div class="row mt-4">
                                 <div class="col">
-                                <input v-model="name" type="text" class="form-control" placeholder="nom" name="name">
+                                <input type="text" v-model="name" class="form-control" placeholder="nom" name="name">
                                 </div>
                             </div>
                             <div class="row mt-4">
@@ -130,7 +127,15 @@
                                 <div class="col">
                                 <input v-model="phone" id="phone" type="tel" class="form-control" placeholder="phone" name="phone">
                                 </div>
+                        </div>
+                        <div class="row mt-4">
+                            <div class="col">
+                                <label>image
+                                    <input type="file" id="file" ref="file" v-on:change="handleFileUpload()"/>
+                                </label>
                             </div>
+                        </div>
+                            
                             <div class="row mt-4">
                                     <div class="col">
                                     <input v-model="password" type="text" class="form-control" placeholder="password" name="password">
@@ -152,41 +157,6 @@
                     </div>
                 </div>
             </section>
-            <section class="fdb-block" v-if="login" style="background-image: url(https://cdn.pixabay.com/photo/2016/11/08/05/11/children-1807511__480.jpg);">
-                <div class="container">
-                        <div class="container text-center">
-                                <button v-on:click="afficheregister" v-if="buttonregister" type="button" class="btn btn-primary">register</button>
-                            </div>
-                        
-                    <div class="row justify-content-center">
-                    <div class="col-12 col-md-8 col-lg-7 col-xl-5 text-center">
-                        <div class="fdb-box">
-                        <div class="row">
-                            <div class="col">
-                            <h1>Log In</h1>
-                            </div>
-                        </div>
-                        <div class="row mt-4">
-                            <div class="col">
-                            <input type="text" class="form-control" placeholder="Email">
-                            </div>
-                        </div>
-                        <div class="row mt-4">
-                            <div class="col">
-                            <input type="password" class="form-control mb-1" placeholder="Password">
-                            <p class="text-right"><a href="https://www.froala.com">Recover Password</a></p>
-                            </div>
-                        </div>
-                        <div class="row mt-4">
-                            <div class="col">
-                            <button class="btn btn-outline-secondary" type="button">Submit</button>
-                            </div>
-                        </div>
-                        </div>
-                    </div>
-                    </div>
-                </div>
-            </section>
         </div>
     </div>
 
@@ -200,7 +170,7 @@
     <script>
 
 new Vue({
-        el: '#test',
+        el: '#app',
         data: {
             login: false,
             register: true,
@@ -214,25 +184,24 @@ new Vue({
             password1:'',
             isregister:false,
             result:'',
+            image:'',
         },
         delimiters:[ "${", "}"],
         mounted(){
             
         },
         methods: {
-            affichelogin: function () {
-                this.login =true;
-                this.register=false;
-                this.buttonregister=true;
-                this.buttonlogin=false;
-                
+            handleFileUpload: function(){
+                this.file = this.$refs.file.files[0];
             },
-            afficheregister: function () {
-                this.login =false;
-                this.register=true;
-                this.buttonregister=false;
-                this.buttonlogin=true;
-                
+            data: function(){
+                return{
+                    file:''
+                }
+            },
+            submitFile: function(){
+
+            
             },
             sendregister: function(){
 
@@ -245,6 +214,7 @@ new Vue({
                     username: '' + this.username,
                     email: '' + this.email,
                     phone:'' + this.phone,
+                    // image:'' + this.image,
                     password: '' + this.password,
                     password1: '' + this.password1,
                     }).then(response => {
@@ -258,8 +228,27 @@ new Vue({
                         console.log(err);
                         this.isregister=false;
                     })
-            },
-        }
+                
+                    let formData = new FormData();
+
+                    formData.append('file', this.file);
+
+                    axios.post( '',
+                            formData,
+                            {
+                            headers: {
+                                'Content-Type': 'multipart/form-data'
+                            }
+                        }
+                                ).then(function(){
+                                    console.log('SUCCESS!!');
+                                    })
+                                    .catch(function(){
+                                    console.log('FAILURE!!');
+                                    });
+                                },
+                                },
+                            
     });
     </script>
 

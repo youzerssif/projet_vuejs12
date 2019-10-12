@@ -21,6 +21,7 @@ urlpatterns = [
     path('', views.index, name='index'),
     path('enregistrement/', views.enregistrement,name='enregistrement'),
     path('post', views.senddata,name='post'),
+    path('exo', views.exo,name='exo'),
     
 
 
